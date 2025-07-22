@@ -16,7 +16,7 @@ class LZ77HashChain(
         val next = ShortArray(LZ77Common.WINDOW_SIZE) { LZ77Common.INIT }
 
         fun insert(pos: Int) {
-            if (pos + 3 >= data.size) return
+            if (pos + 3 >= data.size || pos >= next.size) return
 
             val h3 = LZ77Common.hash(LZ77Common.readU24(data, pos), HASH3_ORDER)
             val h4 = LZ77Common.hash(LZ77Common.readU32(data, pos), HASH4_ORDER)
@@ -38,7 +38,11 @@ class LZ77HashChain(
             var length = 0
             var offset = 0
 
-            if (match3 >= 0 && pos - match3 <= LZ77Common.WINDOW_SIZE) {
+            if (
+                match3 >= 0 &&
+                pos - match3 <= LZ77Common.WINDOW_SIZE &&
+                LZ77Common.readU24(data, match3) == LZ77Common.readU24(data, pos)
+            ) {
                 if (LZ77Common.extend(data, pos, match3, 3, maxMatchSize) == 3) {
                     length = 3
                     offset = pos - match3
@@ -47,7 +51,12 @@ class LZ77HashChain(
 
             var chain = 0
             var match = match4
-            while (match >= 0 && chain++ < maxChain && pos - match <= LZ77Common.WINDOW_SIZE) {
+            while (
+                match >= 0 &&
+                chain++ < maxChain &&
+                pos - match <= LZ77Common.WINDOW_SIZE &&
+                LZ77Common.readU32(data, match) == LZ77Common.readU32(data, pos)
+            ) {
                 val len = LZ77Common.extend(data, pos, match, 4, maxMatchSize)
                 if (len > length) {
                     length = len
@@ -62,11 +71,12 @@ class LZ77HashChain(
 
 
         var pos = 0
-        while (pos < data.size - 4) {
+        while (pos < data.size) {
             if (pos == LZ77Common.WINDOW_SIZE) {
                 LZ77Common.rebase(hash3)
                 LZ77Common.rebase(hash4)
                 LZ77Common.rebase(next)
+                pos = 0
             }
 
             val match = find(pos)
