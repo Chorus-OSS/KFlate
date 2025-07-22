@@ -13,10 +13,8 @@ class LZ77Test {
         val data = dataString.encodeToByteArray()
         val compressor = LZ77HashChain(258, 3, 128, 4096)
 
-        val compressed = compressor.compress(data)
-
         val decompressed = mutableListOf<Byte>()
-        for (token in compressed) {
+        compressor.compress(data) { token ->
             when (token) {
                 is LZ77Token.Literal -> {
                     decompressed += token.value
@@ -32,7 +30,6 @@ class LZ77Test {
                 }
             }
         }
-
         val decompressedString = decompressed.toByteArray().decodeToString()
 
         assertEquals(dataString, decompressedString)
@@ -40,13 +37,11 @@ class LZ77Test {
 
     @Test
     fun largeRoundTrip() {
-        val data = ByteArray(100_000) { ('a'..'z').random().code.toByte() }
+        val data = ByteArray(10_000_000) { ('a'..'z').random().code.toByte() }
         val compressor = LZ77HashChain(258, 3, 128, 4096)
 
-        val compressed = compressor.compress(data)
-
         val decompressed = mutableListOf<Byte>()
-        for (token in compressed) {
+        compressor.compress(data) { token ->
             when (token) {
                 is LZ77Token.Literal -> {
                     decompressed += token.value

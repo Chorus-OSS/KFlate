@@ -8,9 +8,7 @@ internal class LZ77HashChain(
     val niceMatchSize: Int,
     val maxChain: Int,
 ) {
-    internal fun compress(data: ByteArray): List<LZ77Token> {
-        val tokens = mutableListOf<LZ77Token>()
-
+    internal fun compress(data: ByteArray, callback: (LZ77Token) -> Unit) {
         val hash3 = ShortArray(HASH3_SIZE) { LZ77Common.INIT }
         val hash4 = ShortArray(HASH4_SIZE) { LZ77Common.INIT }
         val next = ShortArray(LZ77Common.WINDOW_SIZE) { LZ77Common.INIT }
@@ -81,21 +79,19 @@ internal class LZ77HashChain(
 
             val match = find(pos)
             if (match != null) {
-                tokens += match
+                callback(match)
                 repeat(match.length.toInt()) { insert(pos + it) }
                 pos += match.length.toInt()
             } else {
-                tokens += LZ77Token.Literal(data[pos])
+                callback(LZ77Token.Literal(data[pos]))
                 insert(pos)
                 pos++
             }
         }
-
-        return tokens
     }
 
-    internal fun compress(data: ByteString): List<LZ77Token> {
-        return compress(data.toByteArray())
+    internal fun compress(data: ByteString, callback: (LZ77Token) -> Unit) {
+        compress(data.toByteArray(), callback)
     }
 
     internal companion object {
