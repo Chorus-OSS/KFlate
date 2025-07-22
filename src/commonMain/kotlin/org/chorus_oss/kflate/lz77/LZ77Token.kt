@@ -1,6 +1,6 @@
 package org.chorus_oss.kflate.lz77
 
-sealed interface LZ77Token {
+internal sealed interface LZ77Token {
     data class Literal(val value: Byte) : LZ77Token
     data class Match(val offset: UShort, val length: UShort) : LZ77Token
 }

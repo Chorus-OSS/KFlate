@@ -2,13 +2,13 @@ package org.chorus_oss.kflate.lz77
 
 import kotlinx.io.bytestring.ByteString
 
-class LZ77HashChain(
+internal class LZ77HashChain(
     val maxMatchSize: Int,
     val minMatchSize: Int,
     val niceMatchSize: Int,
     val maxChain: Int,
 ) {
-    fun compress(data: ByteArray): List<LZ77Token> {
+    internal fun compress(data: ByteArray): List<LZ77Token> {
         val tokens = mutableListOf<LZ77Token>()
 
         val hash3 = ShortArray(HASH3_SIZE) { LZ77Common.INIT }
@@ -94,18 +94,18 @@ class LZ77HashChain(
         return tokens
     }
 
-    fun compress(data: ByteString): List<LZ77Token> {
+    internal fun compress(data: ByteString): List<LZ77Token> {
         return compress(data.toByteArray())
     }
 
-    companion object {
-        const val HASH3_ORDER = 15
-        const val HASH4_ORDER = 16
+    internal companion object {
+        internal const val HASH3_ORDER = 15
+        internal const val HASH4_ORDER = 16
 
-        const val HASH3_SIZE = 1 shl HASH3_ORDER
-        const val HASH4_SIZE = 1 shl HASH4_ORDER
+        internal const val HASH3_SIZE = 1 shl HASH3_ORDER
+        internal const val HASH4_SIZE = 1 shl HASH4_ORDER
 
-        const val MIN_MATCH_SIZE = 3
-        const val MAX_MATCH_SIZE = 258
+        internal const val MIN_MATCH_SIZE = 3
+        internal const val MAX_MATCH_SIZE = 258
     }
 }
