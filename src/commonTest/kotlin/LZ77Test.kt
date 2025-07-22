@@ -36,10 +36,6 @@ class LZ77Test {
         val decompressedString = decompressed.toByteArray().decodeToString()
 
         assertEquals(dataString, decompressedString)
-
-        println(dataString)
-        println(compressed)
-        println(decompressedString)
     }
 
     @Test
@@ -66,16 +62,9 @@ class LZ77Test {
                 }
             }
         }
-
         val decompressedData = decompressed.toByteArray()
 
-        println("Original Size: ${data.size}, Processed Size: ${decompressedData.size}")
-
-        assertEquals(data.decodeToString(), decompressedData.decodeToString())
-
         assertTrue(decompressedData.contentEquals(data))
-
-        println(compressed)
     }
 
     @Test
