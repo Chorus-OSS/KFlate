@@ -2,16 +2,12 @@ package org.chorus_oss.kflate.lz77
 
 object LZ77Common {
     const val WINDOW_SIZE = 1 shl 15
-    const val WINDOW_INIT: Short = (-WINDOW_SIZE).toShort()
-
-    fun init(table: ShortArray) {
-        table.fill(WINDOW_INIT)
-    }
+    const val INIT: Short = (-WINDOW_SIZE).toShort()
 
     fun rebase(table: ShortArray) {
         for (i in table.indices) {
             val pos = table[i]
-            table[i] = if (pos >= 0) (pos + WINDOW_INIT).toShort() else (WINDOW_INIT)
+            table[i] = if (pos >= 0) (pos + INIT).toShort() else (INIT)
         }
     }
 
@@ -35,7 +31,24 @@ object LZ77Common {
         return len
     }
 
-    fun hash(seq: UInt, numBits: Byte): UInt {
-        return (seq * 0x1E35A7BDu) shr (32 - numBits)
+    fun hash(seq: UInt, numBits: Int): Int {
+        return ((seq * 0x1E35A7BDu) shr (32 - numBits)).toInt()
+    }
+
+    fun readU24(data: ByteArray, pos: Int): UInt {
+        return (
+                    (data[pos].toUInt() shl 16)
+                    or (data[pos + 1].toUInt() shl 8)
+                    or (data[pos + 2].toUInt())
+                )
+    }
+
+    fun readU32(data: ByteArray, pos: Int): UInt {
+        return (
+                (data[pos].toUInt() shl 24)
+                        or (data[pos + 1].toUInt() shl 16)
+                        or (data[pos + 2].toUInt() shl 8)
+                        or (data[pos + 3].toUInt())
+                )
     }
 }

@@ -28,6 +28,12 @@ kotlin {
                 api(libs.kotlinx.io)
             }
         }
+
+        val commonTest by getting {
+            dependencies {
+                implementation(libs.kotlin.test)
+            }
+        }
     }
 
     mavenPublishing {
