@@ -1,9 +1,8 @@
 import org.chorus_oss.kflate.lz77.LZ77Common
-import org.chorus_oss.kflate.lz77.LZ77HashChain
+import org.chorus_oss.kflate.lz77.LZ77HashChainCompressor
 import org.chorus_oss.kflate.lz77.LZ77Token
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 class LZ77Test {
@@ -11,7 +10,7 @@ class LZ77Test {
     fun roundTrip() {
         val dataString = "abracadabraabracadabra"
         val data = dataString.encodeToByteArray()
-        val compressor = LZ77HashChain(258, 3, 128, 4096)
+        val compressor = LZ77HashChainCompressor(258, 3, 128, 4096)
 
         val decompressed = mutableListOf<Byte>()
         compressor.compress(data) { token ->
@@ -38,7 +37,7 @@ class LZ77Test {
     @Test
     fun largeRoundTrip() {
         val data = ByteArray(10_000_000) { ('a'..'z').random().code.toByte() }
-        val compressor = LZ77HashChain(258, 3, 128, 4096)
+        val compressor = LZ77HashChainCompressor(258, 3, 128, 4096)
 
         val decompressed = mutableListOf<Byte>()
         compressor.compress(data) { token ->

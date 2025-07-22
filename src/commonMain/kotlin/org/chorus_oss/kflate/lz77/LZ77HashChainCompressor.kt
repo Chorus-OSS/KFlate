@@ -2,7 +2,7 @@ package org.chorus_oss.kflate.lz77
 
 import kotlinx.io.bytestring.ByteString
 
-internal class LZ77HashChain(
+internal class LZ77HashChainCompressor(
     val maxMatchSize: Int,
     val minMatchSize: Int,
     val niceMatchSize: Int,
