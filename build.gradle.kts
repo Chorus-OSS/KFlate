@@ -34,6 +34,8 @@ kotlin {
                 implementation(libs.kotlin.test)
             }
         }
+
+        val jvmMain by getting {}
     }
 
     mavenPublishing {
