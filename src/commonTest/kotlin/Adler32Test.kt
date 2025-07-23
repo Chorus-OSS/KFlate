@@ -35,13 +35,13 @@ class Adler32Test {
     fun resume() {
         val adler = Adler32()
         adler.write(ByteArray(1024) { 0xFF.toByte() })
-        val partial = adler.checksum()
+        val partial = adler.checksum
         assertEquals(0x79a6fc2eu, partial)
         adler.write(ByteArray(1024 * 1024 - 1024) { 0xFF.toByte() })
-        assertEquals(0x8e88ef11u, adler.checksum())
+        assertEquals(0x8e88ef11u, adler.checksum)
 
         val adler2 = Adler32(partial)
         adler2.write(ByteArray(1024 * 1024 - 1024) { 0xFF.toByte() })
-        assertEquals(0x8e88ef11u, adler2.checksum())
+        assertEquals(0x8e88ef11u, adler2.checksum)
     }
 }

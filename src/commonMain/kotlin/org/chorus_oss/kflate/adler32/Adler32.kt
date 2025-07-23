@@ -15,7 +15,8 @@ class Adler32 {
         this.b = (sum shr 16).toUShort()
     }
 
-    fun checksum(): UInt = (b.toUInt() shl 16) or (a.toUInt())
+    val checksum: UInt
+        get() = (b.toUInt() shl 16) or (a.toUInt())
 
     fun write(bytes: ByteString) {
         this.write(bytes.toByteArray())
@@ -94,7 +95,7 @@ class Adler32 {
         fun checksum(bytes: ByteArray): UInt {
             val adler = Adler32()
             adler.write(bytes)
-            return adler.checksum()
+            return adler.checksum
         }
     }
 }
