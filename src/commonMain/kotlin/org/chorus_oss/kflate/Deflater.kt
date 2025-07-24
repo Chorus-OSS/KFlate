@@ -1,4 +1,7 @@
 package org.chorus_oss.kflate
 
-expect class Deflater() {
+interface Deflater {
+    fun compress(data: ByteArray): ByteArray
 }
+
+expect fun Deflater(level: Int): Deflater
