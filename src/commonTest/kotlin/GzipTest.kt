@@ -1,5 +1,7 @@
 import org.chorus_oss.kflate.GzipCompressor
+import org.chorus_oss.kflate.GzipDecompressor
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertTrue
 
 class GzipTest {
@@ -27,5 +29,25 @@ class GzipTest {
         println("Raw: ${data.size}, Compressed: ${compressed.size}, Compression: ${ratio}x")
 
         assertTrue(data.size > compressed.size)
+    }
+
+    @Test
+    fun roundTrip() {
+        val data = "abbabbababaccbababcabcabc".repeat(100000).encodeToByteArray()
+
+        val compressed = GzipCompressor().compress(data)
+        val decompressed = GzipDecompressor().decompress(compressed)
+
+        assertContentEquals(data, decompressed)
+    }
+
+    @Test
+    fun randomRoundTrip() {
+        val data = (0 until 100_000).map { ('a'..'z').random() }.joinToString("").encodeToByteArray()
+
+        val compressed = GzipCompressor().compress(data)
+        val decompressed = GzipDecompressor().decompress(compressed)
+
+        assertContentEquals(data, decompressed)
     }
 }
