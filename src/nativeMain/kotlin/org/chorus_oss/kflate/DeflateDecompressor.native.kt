@@ -7,7 +7,7 @@ import kotlinx.io.readByteArray
 import platform.zlib.*
 
 @OptIn(ExperimentalForeignApi::class)
-internal class NativeDeflateDecompressor: Decompressor {
+internal class NativeDeflateDecompressor : Decompressor {
     override fun decompress(data: ByteArray): ByteArray {
         if (data.isEmpty()) return byteArrayOf()
 
