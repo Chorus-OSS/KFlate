@@ -1,13 +1,24 @@
 package org.chorus_oss.kflate
 
-import kotlinx.cinterop.*
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.alloc
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.pin
+import kotlinx.cinterop.ptr
 import kotlinx.io.Buffer
 import kotlinx.io.IOException
 import kotlinx.io.readByteArray
-import platform.zlib.*
+import platform.zlib.Z_FINISH
+import platform.zlib.Z_OK
+import platform.zlib.Z_STREAM_END
+import platform.zlib.deflate
+import platform.zlib.deflateEnd
+import platform.zlib.deflateInit
+import platform.zlib.z_stream
 
 @OptIn(ExperimentalForeignApi::class)
-class NativeDeflater(var level: Int) : Deflater {
+internal class NativeZlibCompressor(var level: Int) : Compressor {
     init {
         require(level in 0..9) { "Deflater level must be between 0 and 9" }
     }
@@ -57,3 +68,5 @@ class NativeDeflater(var level: Int) : Deflater {
         return buf.readByteArray()
     }
 }
+
+internal actual fun platformZlibCompressor(level: Int): Compressor = NativeZlibCompressor(level)

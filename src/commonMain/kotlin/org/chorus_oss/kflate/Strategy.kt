@@ -1,4 +1,4 @@
-package org.chorus_oss.kflate.deflate
+package org.chorus_oss.kflate
 
 enum class Strategy {
     Default,

@@ -2,8 +2,9 @@ package org.chorus_oss.kflate
 
 import kotlinx.io.Buffer
 import kotlinx.io.readByteArray
+import java.util.zip.Deflater
 
-class JvmDeflater(var level: Int) : Deflater {
+internal class JvmDeflateCompressor(var level: Int) : Compressor {
     init {
         require(level in 0..9) { "Deflater level must be between 0 and 9" }
     }
@@ -11,7 +12,7 @@ class JvmDeflater(var level: Int) : Deflater {
     override fun compress(data: ByteArray): ByteArray {
         if (data.isEmpty()) return byteArrayOf()
 
-        val deflater = java.util.zip.Deflater(level, true)
+        val deflater = Deflater(level, true)
         val buf = Buffer()
         try {
             deflater.setInput(data)
@@ -30,3 +31,5 @@ class JvmDeflater(var level: Int) : Deflater {
         return buf.readByteArray()
     }
 }
+
+internal actual fun platformDeflateCompressor(level: Int): Compressor = JvmDeflateCompressor(level)

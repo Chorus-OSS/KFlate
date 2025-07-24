@@ -1,13 +1,13 @@
-import org.chorus_oss.kflate.Deflater
+import org.chorus_oss.kflate.DeflateCompressor
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class DeflaterTest {
+class DeflateCompressorTest {
     @Test
     fun deflaterCompressionTest() {
         val data = "abbabbababaccbababcabcabc".repeat(100000).encodeToByteArray()
 
-        val compressed = Deflater(9).compress(data)
+        val compressed = DeflateCompressor(9).compress(data)
 
         val ratio = data.size / compressed.size
 
