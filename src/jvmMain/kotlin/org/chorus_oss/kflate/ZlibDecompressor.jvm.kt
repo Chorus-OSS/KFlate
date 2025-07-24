@@ -4,11 +4,11 @@ import kotlinx.io.Buffer
 import kotlinx.io.readByteArray
 import java.util.zip.Inflater
 
-internal class JvmDeflateDecompressor : Decompressor {
+internal class JvmZlibDecompressor : Decompressor {
     override fun decompress(data: ByteArray): ByteArray {
         if (data.isEmpty()) return byteArrayOf()
 
-        val inflater = Inflater(true)
+        val inflater = Inflater()
         val buf = Buffer()
         try {
             inflater.setInput(data)
@@ -27,4 +27,4 @@ internal class JvmDeflateDecompressor : Decompressor {
     }
 }
 
-internal actual fun platformDeflateDecompressor(): Decompressor = JvmZlibDecompressor()
+internal actual fun platformZlibDecompressor(): Decompressor = JvmZlibDecompressor()

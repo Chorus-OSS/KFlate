@@ -2,7 +2,6 @@ import org.chorus_oss.kflate.DeflateCompressor
 import org.chorus_oss.kflate.DeflateDecompressor
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
-import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class DeflateTest {

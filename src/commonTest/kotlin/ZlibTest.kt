@@ -1,5 +1,7 @@
 import org.chorus_oss.kflate.ZlibCompressor
+import org.chorus_oss.kflate.ZlibDecompressor
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertTrue
 
 class ZlibTest {
@@ -27,5 +29,25 @@ class ZlibTest {
         println("Raw: ${data.size}, Compressed: ${compressed.size}, Compression: ${ratio}x")
 
         assertTrue(data.size > compressed.size)
+    }
+
+    @Test
+    fun roundTrip() {
+        val data = "abbabbababaccbababcabcabc".repeat(100000).encodeToByteArray()
+
+        val compressed = ZlibCompressor(9).compress(data)
+        val decompressed = ZlibDecompressor().decompress(compressed)
+
+        assertContentEquals(data, decompressed)
+    }
+
+    @Test
+    fun randomRoundTrip() {
+        val data = (0 until 100_000).map { ('a'..'z').random() }.joinToString("").encodeToByteArray()
+
+        val compressed = ZlibCompressor(9).compress(data)
+        val decompressed = ZlibDecompressor().decompress(compressed)
+
+        assertContentEquals(data, decompressed)
     }
 }

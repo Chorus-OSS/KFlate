@@ -7,7 +7,7 @@ import kotlinx.io.readByteArray
 import platform.zlib.*
 
 @OptIn(ExperimentalForeignApi::class)
-internal class NativeDeflateDecompressor: Decompressor {
+internal class NativeZlibDecompressor: Decompressor {
     override fun decompress(data: ByteArray): ByteArray {
         if (data.isEmpty()) return byteArrayOf()
 
@@ -23,7 +23,7 @@ internal class NativeDeflateDecompressor: Decompressor {
                 zStream.ptr,
             )
 
-            if (code != Z_OK) throw IOException("deflate decompression failed, code: $code")
+            if (code != Z_OK) throw IOException("zlib decompression failed, code: $code")
 
             val inBytesPtr = inBytes.pin()
             val outBytesPtr = outBytes.pin()
@@ -35,7 +35,7 @@ internal class NativeDeflateDecompressor: Decompressor {
                 do {
                     code = inflate(zStream.ptr, Z_FINISH)
 
-                    if (code != Z_OK && code != Z_STREAM_END) throw IOException("deflate decompression failed, code: $code")
+                    if (code != Z_OK && code != Z_STREAM_END) throw IOException("zlib decompression failed, code: $code")
 
                     if (zStream.avail_out == 0u) {
                         buf.write(outBytes.toByteArray())
@@ -53,4 +53,4 @@ internal class NativeDeflateDecompressor: Decompressor {
     }
 }
 
-internal actual fun platformDeflateDecompressor(): Decompressor = NativeDeflateDecompressor()
+internal actual fun platformZlibDecompressor(): Decompressor = NativeZlibDecompressor()

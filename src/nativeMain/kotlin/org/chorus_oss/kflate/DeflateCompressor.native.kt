@@ -1,21 +1,10 @@
 package org.chorus_oss.kflate
 
-import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.addressOf
-import kotlinx.cinterop.alloc
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.pin
-import kotlinx.cinterop.ptr
+import kotlinx.cinterop.*
 import kotlinx.io.Buffer
 import kotlinx.io.IOException
 import kotlinx.io.readByteArray
-import platform.zlib.Z_FINISH
-import platform.zlib.Z_OK
-import platform.zlib.Z_STREAM_END
-import platform.zlib.deflate
-import platform.zlib.deflateEnd
-import platform.zlib.deflateInit
-import platform.zlib.z_stream
+import platform.zlib.*
 
 @OptIn(ExperimentalForeignApi::class)
 internal class NativeDeflateCompressor(var level: Int) : Compressor {
