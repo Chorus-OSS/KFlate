@@ -4,8 +4,21 @@ import kotlin.test.assertTrue
 
 class DeflateCompressorTest {
     @Test
-    fun deflaterCompressionTest() {
+    fun compression() {
         val data = "abbabbababaccbababcabcabc".repeat(100000).encodeToByteArray()
+
+        val compressed = DeflateCompressor(9).compress(data)
+
+        val ratio = data.size / compressed.size
+
+        println("Raw: ${data.size}, Compressed: ${compressed.size}, Compression: ${ratio}x")
+
+        assertTrue(data.size > compressed.size)
+    }
+
+    @Test
+    fun random() {
+        val data = (0 until 100_000).map { ('a'..'z').random() }.joinToString("").encodeToByteArray()
 
         val compressed = DeflateCompressor(9).compress(data)
 

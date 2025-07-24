@@ -20,7 +20,7 @@ import platform.zlib.z_stream
 @OptIn(ExperimentalForeignApi::class)
 internal class NativeZlibCompressor(var level: Int) : Compressor {
     init {
-        require(level in 0..9) { "Deflater level must be between 0 and 9" }
+        require(level in 0..9) { "level must be between 0 and 9" }
     }
 
     override fun compress(data: ByteArray): ByteArray {
@@ -39,7 +39,7 @@ internal class NativeZlibCompressor(var level: Int) : Compressor {
                 level,
             )
 
-            if (code != Z_OK) throw IOException("Zlib deflate failed, code: $code")
+            if (code != Z_OK) throw IOException("zlib compression failed, code: $code")
 
             val inBytesPtr = inBytes.pin()
             val outBytesPtr = outBytes.pin()
@@ -51,7 +51,7 @@ internal class NativeZlibCompressor(var level: Int) : Compressor {
                 do {
                     code = deflate(zStream.ptr, Z_FINISH)
 
-                    if (code != Z_OK && code != Z_STREAM_END) throw IOException("Zlib deflate failed, code: $code")
+                    if (code != Z_OK && code != Z_STREAM_END) throw IOException("zlib compression failed, code: $code")
 
                     if (zStream.avail_out == 0u) {
                         buf.write(outBytes.toByteArray())

@@ -6,7 +6,7 @@ import java.util.zip.Deflater
 
 internal class JvmZlibCompressor(var level: Int) : Compressor {
     init {
-        require(level in 0..9) { "Deflater level must be between 0 and 9" }
+        require(level in 0..9) { "level must be between 0 and 9" }
     }
 
     override fun compress(data: ByteArray): ByteArray {

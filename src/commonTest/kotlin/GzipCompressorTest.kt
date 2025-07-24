@@ -1,13 +1,14 @@
-import org.chorus_oss.kflate.ZlibCompressor
+import org.chorus_oss.kflate.DeflateCompressor
+import org.chorus_oss.kflate.GzipCompressor
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class ZlibCompressorTest {
+class GzipCompressorTest {
     @Test
     fun compression() {
         val data = "abbabbababaccbababcabcabc".repeat(100000).encodeToByteArray()
 
-        val compressed = ZlibCompressor(9).compress(data)
+        val compressed = GzipCompressor().compress(data)
 
         val ratio = data.size / compressed.size
 
@@ -20,7 +21,7 @@ class ZlibCompressorTest {
     fun random() {
         val data = (0 until 100_000).map { ('a'..'z').random() }.joinToString("").encodeToByteArray()
 
-        val compressed = ZlibCompressor(9).compress(data)
+        val compressed = GzipCompressor().compress(data)
 
         val ratio = data.size / compressed.size
 

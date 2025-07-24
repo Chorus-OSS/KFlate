@@ -20,7 +20,7 @@ import platform.zlib.z_stream
 @OptIn(ExperimentalForeignApi::class)
 internal class NativeDeflateCompressor(var level: Int) : Compressor {
     init {
-        require(level in 0..9) { "Deflater level must be between 0 and 9" }
+        require(level in 0..9) { "level must be between 0 and 9" }
     }
 
     override fun compress(data: ByteArray): ByteArray {
