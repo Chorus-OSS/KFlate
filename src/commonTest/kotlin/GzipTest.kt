@@ -1,13 +1,14 @@
+import kotlinx.io.bytestring.encodeToByteString
 import org.chorus_oss.kflate.GzipCompressor
 import org.chorus_oss.kflate.GzipDecompressor
 import kotlin.test.Test
-import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class GzipTest {
     @Test
     fun compression() {
-        val data = "abbabbababaccbababcabcabc".repeat(100000).encodeToByteArray()
+        val data = "abbabbababaccbababcabcabc".repeat(100000).encodeToByteString()
 
         val compressed = GzipCompressor().compress(data)
 
@@ -20,7 +21,7 @@ class GzipTest {
 
     @Test
     fun random() {
-        val data = (0 until 100_000).map { ('a'..'z').random() }.joinToString("").encodeToByteArray()
+        val data = (0 until 100_000).map { ('a'..'z').random() }.joinToString("").encodeToByteString()
 
         val compressed = GzipCompressor().compress(data)
 
@@ -33,21 +34,21 @@ class GzipTest {
 
     @Test
     fun roundTrip() {
-        val data = "abbabbababaccbababcabcabc".repeat(100000).encodeToByteArray()
+        val data = "abbabbababaccbababcabcabc".repeat(100000).encodeToByteString()
 
         val compressed = GzipCompressor().compress(data)
         val decompressed = GzipDecompressor().decompress(compressed)
 
-        assertContentEquals(data, decompressed)
+        assertEquals(data, decompressed)
     }
 
     @Test
     fun randomRoundTrip() {
-        val data = (0 until 100_000).map { ('a'..'z').random() }.joinToString("").encodeToByteArray()
+        val data = (0 until 100_000).map { ('a'..'z').random() }.joinToString("").encodeToByteString()
 
         val compressed = GzipCompressor().compress(data)
         val decompressed = GzipDecompressor().decompress(compressed)
 
-        assertContentEquals(data, decompressed)
+        assertEquals(data, decompressed)
     }
 }
