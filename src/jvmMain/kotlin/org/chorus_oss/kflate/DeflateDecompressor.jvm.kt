@@ -27,4 +27,4 @@ internal class JvmDeflateDecompressor : Decompressor {
     }
 }
 
-internal actual fun platformDeflateDecompressor(): Decompressor = JvmZlibDecompressor()
+internal actual fun platformDeflateDecompressor(): Decompressor = JvmDeflateDecompressor()
