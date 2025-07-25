@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.maven.publish)
 }
 
+description = "Deflate/Zlib/Gzip library for Kotlin Multiplatform"
 group = "org.chorus-oss"
 version = "0.0.1"
 
