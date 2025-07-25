@@ -37,13 +37,19 @@ internal class NativeZlibCompressor(var level: Int) : Compressor {
                 zStream.avail_in = inBytes.size.toUInt()
                 zStream.next_out = outBytesPtr.addressOf(0)
                 zStream.avail_out = outBytes.size.toUInt()
+
+                var flush = Z_NO_FLUSH
                 do {
-                    code = deflate(zStream.ptr, Z_FINISH)
+                    if (zStream.avail_in.toInt() == 0) flush = Z_FINISH
+
+                    code = deflate(zStream.ptr, flush)
 
                     if (code != Z_OK && code != Z_STREAM_END) throw IOException("zlib compression failed, code: $code")
 
                     if (zStream.avail_out == 0u) {
                         buf.write(outBytes.toByteArray())
+                        zStream.next_out = outBytesPtr.addressOf(0)
+                        zStream.avail_out = outBytes.size.toUInt()
                     }
                 } while (code == Z_OK)
                 buf.write(outBytes.copyOfRange(0, outBytes.size - zStream.avail_out.toInt()).toByteArray())
