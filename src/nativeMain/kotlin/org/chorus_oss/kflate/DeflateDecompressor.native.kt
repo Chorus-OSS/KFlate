@@ -19,8 +19,9 @@ internal class NativeDeflateDecompressor : Decompressor {
             zStream.zalloc = null
             zStream.zfree = null
             zStream.opaque = null
-            var code = inflateInit(
+            var code = inflateInit2(
                 zStream.ptr,
+                -15,
             )
 
             if (code != Z_OK) throw IOException("deflate decompression failed, code: $code")
@@ -33,12 +34,14 @@ internal class NativeDeflateDecompressor : Decompressor {
                 zStream.next_out = outBytesPtr.addressOf(0)
                 zStream.avail_out = outBytes.size.toUInt()
                 do {
-                    code = inflate(zStream.ptr, Z_FINISH)
+                    code = inflate(zStream.ptr, Z_NO_FLUSH)
 
                     if (code != Z_OK && code != Z_STREAM_END) throw IOException("deflate decompression failed, code: $code")
 
                     if (zStream.avail_out == 0u) {
                         buf.write(outBytes.toByteArray())
+                        zStream.next_out = outBytesPtr.addressOf(0)
+                        zStream.avail_out = outBytes.size.toUInt()
                     }
                 } while (code == Z_OK)
                 buf.write(outBytes.copyOfRange(0, outBytes.size - zStream.avail_out.toInt()).toByteArray())
